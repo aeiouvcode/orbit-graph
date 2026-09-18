@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#090a0d"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"><meta name="referrer" content="no-referrer"><title>Orbit - graph project manager</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="brand"><div class="mark">O</div><span>ORBIT</span><b>/</b><button id="projectName">Launch System</button></div>
+  <div class="header-center"><button class="pill active" data-view="map">Map</button><button class="pill" data-view="list">List</button></div>
+  <div class="header-actions"><span id="saveState">Saved locally</span><button id="securityBtn" title="Encryption">◇ Secure</button><button id="exportBtn" title="Export JSON">Export</button><button id="moreBtn" title="More">•••</button></div>
+</header>
+<div class="shell">
+<aside class="left">
+ <div class="section-label">NODES</div>
+ <button class="tool primary" data-add="task"><i>＋</i><span>Task</span><kbd>T</kbd></button>
+ <button class="tool" data-add="project"><i>◇</i><span>Project</span><kbd>P</kbd></button>
+ <button class="tool" data-add="milestone"><i>◆</i><span>Milestone</span><kbd>M</kbd></button>
+ <button class="tool" data-add="note"><i>≡</i><span>Note</span><kbd>N</kbd></button>
+ <div class="section-label">CANVAS</div>
+ <button class="tool" id="connectMode"><i>↗</i><span>Connect</span><kbd>C</kbd></button>
+ <button class="tool" id="groupBtn"><i>▣</i><span>Group selected</span><kbd>G</kbd></button>
+ <button class="tool" id="fitBtn"><i>⌗</i><span>Fit view</span><kbd>F</kbd></button>
+ <div class="legend"><div><span class="dot todo"></span>To do <b id="todoCount">0</b></div><div><span class="dot doing"></span>In progress <b id="doingCount">0</b></div><div><span class="dot done"></span>Done <b id="doneCount">0</b></div></div>
+ <div class="storage">LOCAL-FIRST<div>Your map stays in this browser.</div></div>
+</aside>
+<main id="stage">
+ <div id="mapView"><svg id="edges"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs><g id="edgeWorld"></g></svg><div id="world"></div></div>
+ <div id="listView" hidden><div class="list-head"><div>Project nodes</div><span>Status</span><span>Type</span></div><div id="listRows"></div></div>
+ <div class="canvas-top"><div class="crumb"><span>All projects</span><b>›</b><strong>Launch System</strong></div><div class="stats"><span><b id="progressText">42%</b> complete</span><div class="bar"><i id="progressBar"></i></div></div></div>
+ <div class="minimap"><canvas id="mini" width="180" height="110"></canvas><span>OVERVIEW</span></div>
+ <div class="zoom"><button id="zoomOut">−</button><span id="zoomText">100%</span><button id="zoomIn">＋</button></div>
+ <div class="help">Drag to move · scroll to zoom · double-click to create</div>
+</main>
+<aside class="inspector" id="inspector">
+ <div class="emptyInspector"><div class="bigmark">◇</div><h3>Select a node</h3><p>Choose anything on the canvas to see its details.</p></div>
+ <div class="details" hidden>
+   <div class="inspect-head"><span>NODE DETAILS</span><button id="closeInspect">×</button></div>
+   <label>Title<input id="nodeTitle"></label>
+   <label>Description<textarea id="nodeDesc" rows="4"></textarea></label>
+   <div class="two"><label>Type<select id="nodeType"><option>task</option><option>project</option><option>milestone</option><option>note</option></select></label><label>Status<select id="nodeStatus"><option value="todo">To do</option><option value="doing">In progress</option><option value="done">Done</option><option value="blocked">Blocked</option></select></label></div>
+   <label>Due date<input type="date" id="nodeDue"></label>
+   <label>Progress<div class="range-row"><input type="range" id="nodeProgress" min="0" max="100"><output id="nodeProgressOut">0%</output></div></label>
+   <div class="section-label">CONNECTIONS</div><div id="connectionList"></div>
+   <button class="danger" id="deleteNode">Delete node</button>
+ </div>
+</aside>
+</div>
+<button id="mobileAdd">＋</button>
+<div id="toast"></div>
+<input type="file" id="importFile" accept="application/json,.orbit" hidden>
+<div class="modal" id="moreMenu" hidden><button id="newProject">New blank map</button><button id="importBtn">Import JSON</button><button id="resetDemo">Restore demo</button></div>
+</div>
+<div id="cryptoGate" class="crypto-gate" hidden>
+ <form id="cryptoForm" class="crypto-card" autocomplete="off">
+  <div class="crypto-mark">O</div><div class="eyebrow">LOCAL ENCRYPTION</div><h2 id="cryptoTitle">Unlock Orbit</h2>
+  <p id="cryptoCopy">Your project is encrypted in this browser. Enter the passphrase to unlock it.</p>
+  <label>Passphrase<input id="passphrase" type="password" minlength="10" maxlength="128" required autocomplete="current-password" spellcheck="false"></label>
+  <label id="confirmWrap" hidden>Confirm passphrase<input id="passphraseConfirm" type="password" minlength="10" maxlength="128" autocomplete="new-password" spellcheck="false"></label>
+  <div id="cryptoError" role="alert"></div><button id="cryptoSubmit" type="submit">Unlock project</button><button id="cryptoCancel" type="button" class="quiet" hidden>Cancel</button>
+  <small>PBKDF2-SHA-256 · AES-256-GCM · key never stored</small>
+ </form>
+</div>
+<script src="app.js"></script>
+</body></html>
