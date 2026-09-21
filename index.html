@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#090a0d"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"><meta name="referrer" content="no-referrer"><title>Orbit - graph project manager</title>
+<meta name="theme-color" content="#edf2f5"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"><meta name="referrer" content="no-referrer"><title>Orbit - graph project manager</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -10,7 +10,7 @@
 <header>
   <div class="brand"><div class="mark">O</div><span>ORBIT</span><b>/</b><button id="projectName">Launch System</button></div>
   <div class="header-center"><button class="pill active" data-view="map">Map</button><button class="pill" data-view="list">List</button></div>
-  <div class="header-actions"><span id="saveState">Saved locally</span><button id="securityBtn" title="Encryption">◇ Secure</button><button id="exportBtn" title="Export JSON">Export</button><button id="moreBtn" title="More">•••</button></div>
+  <div class="header-actions"><span id="saveState">Saved locally</span><button id="undoBtn" title="Undo (Ctrl/⌘ Z)" disabled>↶</button><button id="redoBtn" title="Redo (Ctrl/⌘ Shift Z)" disabled>↷</button><button id="securityBtn" title="Encryption">◇ Secure</button><button id="exportBtn" title="Download encrypted backup">Backup</button><button id="moreBtn" title="More">•••</button></div>
 </header>
 <div class="shell">
 <aside class="left">
@@ -19,7 +19,7 @@
  <button class="tool" data-add="project"><i>◇</i><span>Project</span><kbd>P</kbd></button>
  <button class="tool" data-add="milestone"><i>◆</i><span>Milestone</span><kbd>M</kbd></button>
  <button class="tool" data-add="note"><i>≡</i><span>Note</span><kbd>N</kbd></button>
- <div class="section-label">CANVAS</div>
+ <div class="section-label">FIND</div><label class="search"><span>⌕</span><input id="nodeSearch" type="search" placeholder="Search nodes" autocomplete="off"></label><div class="section-label">CANVAS</div>
  <button class="tool" id="connectMode"><i>↗</i><span>Connect</span><kbd>C</kbd></button>
  <button class="tool" id="groupBtn"><i>▣</i><span>Group selected</span><kbd>G</kbd></button>
  <button class="tool" id="fitBtn"><i>⌗</i><span>Fit view</span><kbd>F</kbd></button>
@@ -32,7 +32,7 @@
  <div class="canvas-top"><div class="crumb"><span>All projects</span><b>›</b><strong>Launch System</strong></div><div class="stats"><span><b id="progressText">42%</b> complete</span><div class="bar"><i id="progressBar"></i></div></div></div>
  <div class="minimap"><canvas id="mini" width="180" height="110"></canvas><span>OVERVIEW</span></div>
  <div class="zoom"><button id="zoomOut">−</button><span id="zoomText">100%</span><button id="zoomIn">＋</button></div>
- <div class="help">Drag to move · scroll to zoom · double-click to create</div>
+ <div class="help">Drag to move · scroll to zoom · double-click to create · ⌘Z to undo</div>
 </main>
 <aside class="inspector" id="inspector">
  <div class="emptyInspector"><div class="bigmark">◇</div><h3>Select a node</h3><p>Choose anything on the canvas to see its details.</p></div>
@@ -43,7 +43,7 @@
    <div class="two"><label>Type<select id="nodeType"><option>task</option><option>project</option><option>milestone</option><option>note</option></select></label><label>Status<select id="nodeStatus"><option value="todo">To do</option><option value="doing">In progress</option><option value="done">Done</option><option value="blocked">Blocked</option></select></label></div>
    <label>Due date<input type="date" id="nodeDue"></label>
    <label>Progress<div class="range-row"><input type="range" id="nodeProgress" min="0" max="100"><output id="nodeProgressOut">0%</output></div></label>
-   <div class="section-label">CONNECTIONS</div><div id="connectionList"></div>
+   <div class="section-label">CONNECTIONS</div><p class="connection-help">Dependencies stay acyclic. Remove a link here if the plan changes.</p><div id="connectionList"></div>
    <button class="danger" id="deleteNode">Delete node</button>
  </div>
 </aside>
@@ -51,7 +51,7 @@
 <button id="mobileAdd">＋</button>
 <div id="toast"></div>
 <input type="file" id="importFile" accept="application/json,.orbit" hidden>
-<div class="modal" id="moreMenu" hidden><button id="newProject">New blank map</button><button id="importBtn">Import JSON</button><button id="resetDemo">Restore demo</button></div>
+<div class="modal" id="moreMenu" hidden><button id="newProject">New blank map</button><button id="importBtn">Restore backup</button><button id="resetDemo">Restore demo</button></div>
 </div>
 <div id="cryptoGate" class="crypto-gate" hidden>
  <form id="cryptoForm" class="crypto-card" autocomplete="off">
